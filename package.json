@@ -1,5 +1,5 @@
 {
-	"name": "spot",
+	"name": "doscprd-spot",
 	"version": "0.0.1",
 	"description": "A discord bot library.",
 	"main": "src/index.ts",
@@ -17,6 +17,8 @@
 	],
 	"author": "MiccDev",
 	"license": "MIT",
+	"homepage": "https://github.com/DiscordSpot/Spot",
+	"types": "./src/index.ts",
 	"dependencies": {
 		"fs": "^0.0.1-security",
 		"node-fetch": "^2.6.7",

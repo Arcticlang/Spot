@@ -6,6 +6,23 @@ import { SpotConfiguration } from './types';
 import { gateway } from './constants';
 import EventHandler from './events/EventHandler';
 import API from './api/API';
+import { events } from './events/Listener';
+
+export enum CloseCodes {
+    UNKNOWN = 4000,
+    OPCODE = 4001,
+    DECODE = 4002,
+    NO_AUTH = 4003,
+    ALREADY_AUTH = 4005,
+    INVALID_SEQ = 4007,
+    RATE_LIMITED = 4008,
+    TIMED_OUT = 4009,
+    INVALID_SHARD = 4010,
+    SHARD_REQUIRED = 4011,
+    INVAID_API_VERSION = 4012,
+    INVALID_INTENTS = 4013,
+    DISALLOWED_INTENTS = 4014
+}
 
 export default class Spot {
     readonly config: SpotConfiguration;
@@ -57,8 +74,20 @@ export default class Spot {
                     break;
             }
 
+            console.log(events);
+
             await EventHandler.findEvent(this, t, d);
         });
+
+        this.ws.on("close", (code, reason) => {
+            const closeCode = code as CloseCodes;
+
+            if(closeCode == CloseCodes.INVALID_INTENTS) {
+                console.error(`Bot intents do not match the events that you registered.`);
+                return;
+            }
+            console.error(`Error: Gateway error code ${closeCode}.`);
+        })
     }
 
     private heartbeat = (ms: number, s: number) => {
