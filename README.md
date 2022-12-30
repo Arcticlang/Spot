@@ -51,12 +51,12 @@ For the bot to run, you will need to provide a token in your 'bot.config.ts'
 You *must* provide a **name** and a **token**.
 
 ```ts
-import { BotConfiguration } from "discord-spot";
+import { SpotConfiguration } from "discord-spot";
 
 export default {
     name: "Your Bot Name",
     token: "Your Bot Token"
-} as BotConfiguration;
+} as SpotConfiguration;
 ```
 
 ### Support
