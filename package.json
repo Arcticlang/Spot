@@ -1,6 +1,6 @@
 {
-	"name": "doscprd-spot",
-	"version": "0.0.1",
+	"name": "discord-spot",
+	"version": "0.0.3",
 	"description": "A discord bot library.",
 	"main": "src/index.ts",
 	"scripts": {
