@@ -2,10 +2,12 @@ import path from 'path';
 import fs from "fs";
 import WebSocket from "ws";
 
+import { events } from './events/Listener'
 import { SpotConfiguration } from './types';
 import { gateway } from './constants';
 import EventHandler from './events/EventHandler';
 import API from './api/API';
+import getIntents from './intents'
 
 export default class Spot {
     readonly config: SpotConfiguration;
@@ -13,7 +15,7 @@ export default class Spot {
 
     readonly ws: WebSocket;
     private interval: NodeJS.Timer;
-    private payload: object;
+    private payload: any;
 
     constructor() {
         this.config = this.loadConfig();
@@ -26,7 +28,7 @@ export default class Spot {
             op: 2,
             d: {
                 token: this.config.token,
-                intents: 131071,
+                intents: 0,
                 properties: {
                     os: "linux",
                     browser: "spot",
@@ -44,6 +46,7 @@ export default class Spot {
 
     run() {
         this.ws.on("open", () => {
+            this.payload.d.intents = getIntents(events, this.config)
             this.ws.send(JSON.stringify(this.payload));
         });
 

@@ -6,6 +6,7 @@ export type SpotConfiguration = {
     version?: string;
 	useCustomCommands?: boolean;
 	prefix?: string;
+	enableMessageContent: boolean;
 	// logRegisteredEvents?: boolean;
 	// logRegisteredCommands?: boolean;
 }
