@@ -1,6 +1,6 @@
 {
-	"name": "spot",
-	"version": "0.0.1",
+	"name": "discord-spot",
+	"version": "0.0.3",
 	"description": "A discord bot library.",
 	"main": "src/index.ts",
 	"scripts": {
@@ -17,6 +17,8 @@
 	],
 	"author": "MiccDev",
 	"license": "MIT",
+	"homepage": "https://github.com/DiscordSpot/Spot",
+	"types": "./src/index.ts",
 	"dependencies": {
 		"fs": "^0.0.1-security",
 		"node-fetch": "^2.6.7",

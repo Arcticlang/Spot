@@ -9,6 +9,22 @@ import EventHandler from './events/EventHandler';
 import API from './api/API';
 import getIntents from './intents'
 
+export enum CloseCodes {
+    UNKNOWN = 4000,
+    OPCODE = 4001,
+    DECODE = 4002,
+    NO_AUTH = 4003,
+    ALREADY_AUTH = 4005,
+    INVALID_SEQ = 4007,
+    RATE_LIMITED = 4008,
+    TIMED_OUT = 4009,
+    INVALID_SHARD = 4010,
+    SHARD_REQUIRED = 4011,
+    INVAID_API_VERSION = 4012,
+    INVALID_INTENTS = 4013,
+    DISALLOWED_INTENTS = 4014
+}
+
 export default class Spot {
     readonly config: SpotConfiguration;
     readonly api: API;
@@ -60,8 +76,15 @@ export default class Spot {
                     break;
             }
 
+            console.log(events);
+
             await EventHandler.findEvent(this, t, d);
         });
+
+        this.ws.on("close", (code, reason) => {
+            const closeCode = code as CloseCodes;
+            console.error(`Error: Gateway error code ${closeCode}.`);
+        })
     }
 
     private heartbeat = (ms: number, s: number) => {
