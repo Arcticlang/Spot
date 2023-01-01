@@ -9,6 +9,8 @@ import EventHandler from './events/EventHandler';
 import API from './api/API';
 import getIntents from './intents'
 
+import { supportsAnsi } from './supports_ansi'
+
 export enum CloseCodes {
     UNKNOWN = 4000,
     OPCODE = 4001,
@@ -96,7 +98,11 @@ export default class Spot {
 
     private loadConfig(): SpotConfiguration {
         const configPath = path.join(process.cwd(), "bot.config.ts");
-        if(!fs.existsSync(configPath)) throw new Error("Bot configuration file not found! Please create one in the execution directory.");
+        if(!fs.existsSync(configPath)) {
+            let supports_ansi = supportsAnsi()
+            if (supports_ansi)  throw new Error("\x1b[31m[ FILE NOT FOUND ]\x1b[0m Bot configuration file not found! Please create one in the execution directory.");
+            if (!supports_ansi) throw new Error("[ FILE NOT FOUND ] Bot configuration file not found! Please create one in the execution directory.");
+        }
         
         const loadedConfig = require(configPath);
         if(!loadedConfig.default) throw new Error("No default configuration found.");

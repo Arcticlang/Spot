@@ -59,6 +59,11 @@ export default {
 } as SpotConfiguration;
 ```
 You can set **enableMessageContent** to true to enable Message Content, You *must* enable that in your Discord developer portal 
+
 ### Support
 
 To get support for Spot join our [discord](https://discord.com/)
+
+### Credit
+
+[keqingrong/supports-ansi](https://github.com/keqingrong/supports-ansi) - Check whether terminal supports ANSI. 
