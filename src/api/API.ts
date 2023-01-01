@@ -27,7 +27,7 @@ export default class API {
     ) {
         const token = this.spot.config.token;
         if(!token)
-            throw new Error("Missing token. Please make sure that you have a token inside of bot.config.ts");
+            throw new Error("\x1b[31m[ ERROR ] \x1b[0mToken is missing. \n\n\x1b[36m[ i ] Please make sure that you have a token inside of bot.config.ts\x1b[0m");
         const request: RequestInit = {
             body: JSON.stringify(body) as BodyInit,
             method,
@@ -45,7 +45,7 @@ export default class API {
         );
 
         if(res.status != 200) 
-            throw new Error(`Status: ${res.status} ${res.statusText}\n${await res.text()}`);
+            throw new Error(`\x1b[31m[ STATUS ]\x1b[0m ${res.status} ${res.statusText}\n${await res.text()}`);
 
         return await res.json();
     }
