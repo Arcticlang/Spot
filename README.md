@@ -58,7 +58,7 @@ export default {
     token: "Your Bot Token"
 } as SpotConfiguration;
 ```
-
+You can set **enableMessageContent** to true to enable Message Content, You *must* enable that in your Discord developer portal 
 ### Support
 
 To get support for Spot join our [discord](https://discord.com/)

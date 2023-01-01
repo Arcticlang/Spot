@@ -2,11 +2,12 @@ import path from 'path';
 import fs from "fs";
 import WebSocket from "ws";
 
+import { events } from './events/Listener'
 import { SpotConfiguration } from './types';
 import { gateway } from './constants';
 import EventHandler from './events/EventHandler';
 import API from './api/API';
-import { events } from './events/Listener';
+import getIntents from './intents'
 
 export enum CloseCodes {
     UNKNOWN = 4000,
@@ -30,7 +31,7 @@ export default class Spot {
 
     readonly ws: WebSocket;
     private interval: NodeJS.Timer;
-    private payload: object;
+    private payload: any;
 
     constructor() {
         this.config = this.loadConfig();
@@ -43,7 +44,7 @@ export default class Spot {
             op: 2,
             d: {
                 token: this.config.token,
-                intents: 131071,
+                intents: 0,
                 properties: {
                     os: "linux",
                     browser: "spot",
@@ -61,6 +62,7 @@ export default class Spot {
 
     run() {
         this.ws.on("open", () => {
+            this.payload.d.intents = getIntents(events, this.config)
             this.ws.send(JSON.stringify(this.payload));
         });
 
@@ -81,11 +83,6 @@ export default class Spot {
 
         this.ws.on("close", (code, reason) => {
             const closeCode = code as CloseCodes;
-
-            if(closeCode == CloseCodes.INVALID_INTENTS) {
-                console.error(`Bot intents do not match the events that you registered.`);
-                return;
-            }
             console.error(`Error: Gateway error code ${closeCode}.`);
         })
     }
