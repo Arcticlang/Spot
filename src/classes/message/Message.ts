@@ -5,6 +5,8 @@ import { ChannelMention } from "../channel/ChannelMention";
 import Embed from "./Embed";
 import User from "../user/User";
 import Role from "../guild/role/Role";
+import MentionHandler from "./MentionHandler";
+import { Sendable } from '../../types';
 
 export enum MessageType {
 	DEFAULT = 0,
@@ -52,7 +54,7 @@ export default class Message extends Base {
 	private _mentionEveryone!: boolean;
 	private _mentions!: User[];
 	private _mentionRoles!: Role[];
-	private _mentionChannels!: ChannelMention[];
+	private _mentionChannels!: BaseChannel[];
 	private _embeds!: Embed[];
 	private _pinned!: boolean;
 	private _type!: MessageType;
@@ -79,21 +81,26 @@ export default class Message extends Base {
 		this._tts = message.tts;
 
 		this._mentionEveryone = message.mention_everyone;
-		this._mentions = message.mentions.map(
+		this._mentions = await message.mentions.map(
 			async (mention: any) => await User.build(this.spot, mention.id)
 		);
-		this._mentionRoles = message.mention_roles.map(
+		this._mentionRoles = await message.mention_roles.map(
 			async (role: any) => await Role.build(this.spot, role.id)
 		);
-		this._mentionChannels = message.mention_channels || undefined;
+		this._mentionChannels = message.mention_channels ? await message.mention_channels.map(
+			async (channel: any) => await BaseChannel.build(this.spot, channel.id)
+		) : undefined;
 
 		this._embeds = message.embeds;
 		this._pinned = message.pinned;
 		this._type = message.type;
 	}
 
-	async reply(message: string) {
-		return await this.spot.api.channels.replyMessage(this._channelId, this.id, message);
+	async reply(...sendable: Sendable[]) {
+		const messageData = await this.spot.api.channels.generateMessageData(sendable);
+		messageData.message_reference = { message_id: this.id };
+		
+		return await this.spot.api.channels.createMessage(this._channelId, messageData);
 	}
 
 	get author() {
@@ -120,7 +127,8 @@ export default class Message extends Base {
 		return this._tts;
 	}
 
-	get mentionsEveryone() {
-		return this._mentionEveryone;
+	get mentionHandler() {
+		return new MentionHandler(this, this._mentionEveryone, this._mentions, this._mentionRoles, this._mentionChannels);
 	}
+
 }

@@ -14,33 +14,32 @@ npm i discord-spot
 
 ```ts
 import {
-    Spot,
-    Command,
-    CommandListener,
-    EventListener,
-    Event,
-    Message
+	Spot,
+	Command,
+	CommandListener,
+	EventListener,
+	Event,
+	Message,
 } from "discord-spot";
 
 @CommandListener
 @EventListener
 class TestBot extends Spot {
+	constructor() {
+		super();
 
-    constructor() {
-        super();
+		this.run();
+	}
 
-        this.run();
-    }
+	@Event("ready")
+	onReady(spot: Spot) {
+		console.log("Bot is ready.");
+	}
 
-    @Event("ready")
-    onReady(spot: Spot) {
-        console.log("Bot is ready.")
-    }
-
-    @Command("ping")
-    flip(spot: Spot, message: Message, args: string[]) {
-        message.reply("Pong!");
-    }
+	@Command("ping")
+	flip(spot: Spot, message: Message, args: string[]) {
+		message.reply("Pong!");
+	}
 }
 
 new TestBot();
@@ -48,17 +47,18 @@ new TestBot();
 
 This code creates a ready event and a ping command.
 For the bot to run, you will need to provide a token in your 'bot.config.ts'
-You *must* provide a **name** and a **token**.
+You _must_ provide a **name** and a **token**.
 
 ```ts
 import { SpotConfiguration } from "discord-spot";
 
 export default {
-    name: "Your Bot Name",
-    token: "Your Bot Token"
+	name: "Your Bot Name",
+	token: "Your Bot Token",
 } as SpotConfiguration;
 ```
-You can set **enableMessageContent** to true to enable Message Content, You *must* enable that in your Discord developer portal 
+
+You can set **enableMessageContent** to true to enable Message Content, You _must_ enable that in your Discord developer portal 
 
 ### Support
 

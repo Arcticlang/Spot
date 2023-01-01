@@ -15,6 +15,7 @@ export default class User extends Base implements Sender {
 
     readonly id: string;
 
+    private _channel!: BaseChannel;
     private _username!: string;
     private _discriminator!: string;
     private _avatar!: string;
@@ -52,14 +53,18 @@ export default class User extends Base implements Sender {
 
     async makeDMs() {
         const channelData = await this.spot.api.users.createDM(this.id);
-        const channel = await BaseChannel.build(this.spot, channelData.id);
-        return channel;
+        this._channel = await BaseChannel.build(this.spot, channelData.id);
+        return this._channel;
     }
 
     async send(...sendable: Sendable[]) {
         const dms = await this.makeDMs();
         if(!dms) return;
         return await dms.send(...sendable);
+    }
+
+    get channel() {
+        return this._channel;
     }
 
     getUsername() {

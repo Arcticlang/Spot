@@ -1,11 +1,30 @@
 import { Embed } from "./classes";
 
 export type SpotConfiguration = {
+	/**
+	 * The name of the bot
+	 */
     name: string;
+	/**
+	 * The token required for the bot to be run.
+	 */
     token: string;
+	/**
+	 * Optional version, used for help commands.
+	 */
     version?: string;
+	/**
+	 * This will allow for the "Command" decorator.
+	 * Note: This *will* enable message content.
+	 */
 	useCustomCommands?: boolean;
+	/**
+	 * This is required if 'useCustomCommands' is enabled.
+	 */
 	prefix?: string;
+	/**
+	 * This is needed to be enabled if you want to use message content.
+	 */
 	enableMessageContent: boolean;
 	// logRegisteredEvents?: boolean;
 	// logRegisteredCommands?: boolean;

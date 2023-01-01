@@ -1,30 +1,30 @@
-import path from 'path';
+import path from "path";
 import fs from "fs";
 import WebSocket from "ws";
 
-import { events } from './events/Listener'
-import { SpotConfiguration } from './types';
-import { gateway } from './constants';
-import EventHandler from './events/EventHandler';
-import API from './api/API';
-import getIntents from './intents'
+import { events } from "./events/Listener";
+import { SpotConfiguration } from "./types";
+import { gateway } from "./constants";
+import EventHandler from "./events/EventHandler";
+import API from "./api/API";
+import getIntents from "./intents";
 
 import { supportsAnsi } from './supports_ansi'
 
 export enum CloseCodes {
-    UNKNOWN = 4000,
-    OPCODE = 4001,
-    DECODE = 4002,
-    NO_AUTH = 4003,
-    ALREADY_AUTH = 4005,
-    INVALID_SEQ = 4007,
-    RATE_LIMITED = 4008,
-    TIMED_OUT = 4009,
-    INVALID_SHARD = 4010,
-    SHARD_REQUIRED = 4011,
-    INVAID_API_VERSION = 4012,
-    INVALID_INTENTS = 4013,
-    DISALLOWED_INTENTS = 4014
+	UNKNOWN = 4000,
+	OPCODE = 4001,
+	DECODE = 4002,
+	NO_AUTH = 4003,
+	ALREADY_AUTH = 4005,
+	INVALID_SEQ = 4007,
+	RATE_LIMITED = 4008,
+	TIMED_OUT = 4009,
+	INVALID_SHARD = 4010,
+	SHARD_REQUIRED = 4011,
+	INVAID_API_VERSION = 4012,
+	INVALID_INTENTS = 4013,
+	DISALLOWED_INTENTS = 4014,
 }
 
 export default class Spot {
