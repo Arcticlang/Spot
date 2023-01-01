@@ -45,7 +45,7 @@ export default class API {
         );
 
         if(res.status != 200) 
-            throw new Error(`Status: ${res.status} ${res.statusText}\n${await res.text()}`);
+            throw new Error(`\x1b[31m[ STATUS ]\x1b[0m ${res.status} ${res.statusText}\n${await res.text()}`);
 
         return await res.json();
     }
