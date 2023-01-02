@@ -2,6 +2,13 @@ import CommandHandler from "./CommandHandler";
 
 export const commandSymbol = Symbol("commands");
 
+/**
+ * This decorator will be used when registering commands.
+ * Any command registered with the `Command` decorator will **requrie** this on all classes that have a command in it.
+ * Commands will **only** be registered if the `useCustomCommands` property in `bot.config.ts`.
+ * @param Base The base class that will be used for commands.
+ * @returns 
+ */
 export function CommandListener<T extends { new(...args: any[]): {}}>(Base: T) {
     return class extends Base {
         constructor(...args: any[]) {
@@ -17,6 +24,12 @@ export function CommandListener<T extends { new(...args: any[]): {}}>(Base: T) {
     }
 }
 
+/**
+ * This will register a custom command for the bot.
+ * Commands will **only** be registered if the `useCustomCommands` property in `bot.config.ts`.
+ * @param name The command name to be used for custom commands.
+ * @returns
+ */
 export function Command(name: string) {
     return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         target[commandSymbol] = target[commandSymbol] || new Array<[string, string]>();
