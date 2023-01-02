@@ -7,7 +7,11 @@ export default class GuildAPI {
 		this.api = api;
 	}
 
+	async getGuild(guild: string) {
+		return await this.api.call(`/guilds/${guild}`, { with_counts: true });
+	}
+
 	async getRole(guild: string) {
-		return this.api.call(`/guilds/${guild}/roles`);
+		return await this.api.call(`/guilds/${guild}/roles`);
 	}
 }

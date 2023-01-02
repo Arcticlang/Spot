@@ -62,9 +62,13 @@ export default class Spot {
         };
     }
 
+    /**
+     * Runs the bot using the token specified in `bot.config.ts`.
+     * This is required for the bot to be able to run.
+     */
     run() {
         this.ws.on("open", () => {
-            this.payload.d.intents = getIntents(events, this.config)
+            this.payload.d.intents = getIntents(events, this.config);
             this.ws.send(JSON.stringify(this.payload));
         });
 
@@ -74,6 +78,7 @@ export default class Spot {
             switch(op) {
                 case 10:
                     const { heartbeat_interval } = d;
+                    clearInterval(this.interval);
                     this.interval = this.heartbeat(heartbeat_interval, s);
                     break;
             }
