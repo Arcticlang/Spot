@@ -1,6 +1,6 @@
 import Base from "../../Base";
 import Spot from '../../../Spot';
-import { Color } from '../../Color';
+import Color, { ColorResolveable } from '../../Color';
 
 export default class Role extends Base {
     static async build(spot: Spot, id: string) {
@@ -30,7 +30,7 @@ export default class Role extends Base {
         const role = await this.spot.api.guilds.getRole(this.id);
         
         this._name = role.name;
-        this._color = role.color;
+        this._color = role.color ? new Color(role.color as ColorResolveable) : Color.Default;
         this._hoist = role.hoist;
         this._icon = role.icon;
     }

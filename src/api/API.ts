@@ -44,10 +44,12 @@ export default class API {
             request
         );
 
-        if(res.status != 200) 
+        if(!(res.status == 200 ||
+            res.status == 204))
             throw new Error(`\x1b[31m[ STATUS ]\x1b[0m ${res.status} ${res.statusText}\n${await res.text()}`);
 
-        return await res.json();
+        if(res.status != 204)
+            return await res.json();
     }
 
 }

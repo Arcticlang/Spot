@@ -52,6 +52,14 @@ export default class ChannelAPI {
 		);
 	}
 
+	async deleteMessage(channel: string, message: string) {
+		await this.api.call(
+			`/channels/${channel}/messages/${message}`,
+			undefined,
+			"DELETE"
+		);
+	}
+
 	async getMessage(channel: string, message: string) {
 		return await this.api.call(
 			`/channels/${channel}/messages/${message}`

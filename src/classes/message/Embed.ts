@@ -1,4 +1,4 @@
-import { Color } from "../Color";
+import Color from "../Color";
 
 export interface EmbedFooter {
     text: string;
@@ -96,7 +96,7 @@ export default class Embed {
             description: this.description,
             url: this.url,
             timestamp: this.timestamp,
-            color: this.color,
+            color: this.color?.getColor(),
             footer: this.footer,
             image: this.image,
             author: this.author,

@@ -1,6 +1,6 @@
 import Base from "../Base";
 import Spot from '../../Spot';
-import { Color } from '../Color';
+import Color, { ColorResolveable } from '../Color';
 import { Nitro } from "./Nitro";
 import { Sender } from "../../interfaces/Sender";
 import { Sendable } from "../../types";
@@ -44,7 +44,7 @@ export default class User extends Base implements Sender {
         this._system = user.system || false;
         this._mfaEnabled = user.mfa_enabled || false;
         this._banner = user.banner || undefined;
-        this._accentColor = user.accent_color || undefined;
+        this._accentColor = user.accent_color ? new Color(user.accent_color as ColorResolveable) : Color.Default;
         this._locale = user.locale || "en-US";
         this._verified = user.verified || false;
         this._email = user.email || undefined;

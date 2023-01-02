@@ -78,14 +78,12 @@ export default class Spot {
                     break;
             }
 
-            console.log(events);
-
             await EventHandler.findEvent(this, t, d);
         });
 
         this.ws.on("close", (code, reason) => {
             const closeCode = code as CloseCodes;
-            console.error(`Error: Gateway error code ${closeCode}.`);
+            console.error(`Error: Gateway error code ${closeCode} for \n${reason}.`);
         })
     }
 

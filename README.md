@@ -58,7 +58,8 @@ export default {
 } as SpotConfiguration;
 ```
 
-You can set **enableMessageContent** to true to enable Message Content, You _must_ enable that in your Discord developer portal 
+You can set **enableMessageContent** to true to enable Message Content, You _must_ enable that in your Discord developer portal.
+Note: This option will be ignored if the **useCustomCommands** property is enabled.
 
 ### Support
 

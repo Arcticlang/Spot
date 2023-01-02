@@ -1,7 +1,6 @@
 import Base from "../Base";
 import BaseChannel from "../channel/BaseChannel";
 import Spot from "../../Spot";
-import { ChannelMention } from "../channel/ChannelMention";
 import Embed from "./Embed";
 import User from "../user/User";
 import Role from "../guild/role/Role";
@@ -99,8 +98,13 @@ export default class Message extends Base {
 	async reply(...sendable: Sendable[]) {
 		const messageData = await this.spot.api.channels.generateMessageData(sendable);
 		messageData.message_reference = { message_id: this.id };
+		const message = await this.spot.api.channels.createMessage(this._channelId, messageData);
 		
-		return await this.spot.api.channels.createMessage(this._channelId, messageData);
+		return new Message(this.spot, message.id, message.channel_id);
+	}
+
+	async delete() {
+		await this.spot.api.channels.deleteMessage(this._channelId, this.id);
 	}
 
 	get author() {
@@ -115,11 +119,11 @@ export default class Message extends Base {
 		return this._content;
 	}
 
-	getTimestamp() {
+	get createdTimestamp() {
 		return this._timestamp;
 	}
 
-	getEditedTimestamp() {
+	get editedTimestamp() {
 		return this._editedTimestamp;
 	}
 
@@ -127,8 +131,20 @@ export default class Message extends Base {
 		return this._tts;
 	}
 
+	get isPinned() {
+		return this._pinned;
+	}
+
 	get mentionHandler() {
 		return new MentionHandler(this, this._mentionEveryone, this._mentions, this._mentionRoles, this._mentionChannels);
+	}
+
+	get embeds() {
+		return this._embeds;
+	}
+
+	get type() {
+		return this._type;
 	}
 
 }
