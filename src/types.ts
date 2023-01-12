@@ -93,4 +93,10 @@ export type Events =
 	| "voice_server_update"
 	| "webhooks_update";
 
-export type Sendable = | string | Embed;
+export type MessageContent = {
+	content?: string;
+	embeds?: Embed[];
+	tts?: boolean;
+};
+
+export type Sendable = | string | Embed | MessageContent;

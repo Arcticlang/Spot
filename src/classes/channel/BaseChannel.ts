@@ -2,6 +2,7 @@ import { Sender } from "../../interfaces/Sender";
 import Spot from "../../Spot";
 import Base from "../Base";
 import { Sendable } from "../../types";
+import Message from "../message/Message";
 
 export enum ChannelType {
 	TEXT = 0,
@@ -37,9 +38,10 @@ export default class BaseChannel extends Base implements Sender {
 	}
 
 	async send(...sendable: Sendable[]) {
-		return await this.spot.api.channels.createMessage(
+		const message = await this.spot.api.channels.createMessage(
 			this.id,
 			await this.spot.api.channels.generateMessageData(sendable)
 		);
+		return await Message.build(this.spot, message.id, this);
 	}
 }

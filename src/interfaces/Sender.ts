@@ -1,7 +1,8 @@
 import { Sendable } from '../types';
+import Message from '../classes/message/Message';
 
 export interface Sender {
-    send(...sendable: Sendable[]): void|Promise<void>;
+    send(...sendable: Sendable[]): Message|Promise<Message>;
 }
 
 export function isSender(obj: object): obj is Sender {

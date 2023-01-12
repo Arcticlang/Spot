@@ -4,12 +4,14 @@ import WebSocket from "ws";
 
 import { events } from "./events/Listener";
 import { SpotConfiguration } from "./types";
-import { gateway } from "./constants";
+import { base64Decode, gateway } from "./constants";
 import EventHandler from "./events/EventHandler";
 import API from "./api/API";
 import getIntents from "./intents";
 
 import { supportsAnsi } from './supports_ansi'
+import Application from "./Application";
+import { User } from "./classes";
 
 export enum CloseCodes {
 	UNKNOWN = 4000,
@@ -28,12 +30,15 @@ export enum CloseCodes {
 }
 
 export default class Spot {
+    readonly id: string;
     readonly config: SpotConfiguration;
     readonly api: API;
-
+    
     readonly ws: WebSocket;
     private interval: NodeJS.Timer;
     private payload: any;
+    private application!: Application;
+    private user!: User;
 
     constructor() {
         this.config = this.loadConfig();
@@ -60,6 +65,8 @@ export default class Spot {
                 }
             }
         };
+
+        this.id = base64Decode(this.config.token.split('.')[0]);
     }
 
     /**
@@ -67,7 +74,9 @@ export default class Spot {
      * This is required for the bot to be able to run.
      */
     run() {
-        this.ws.on("open", () => {
+        this.ws.on("open", async () => {
+            this.application = await Application.build(this);
+            this.user = await User.build(this, this.id);
             this.payload.d.intents = getIntents(events, this.config);
             this.ws.send(JSON.stringify(this.payload));
         });
@@ -90,6 +99,10 @@ export default class Spot {
             const closeCode = code as CloseCodes;
             console.error(`Error: Gateway error code ${closeCode} for \n${reason}.`);
         })
+    }
+
+    getUser() {
+        return this.user;
     }
 
     private heartbeat = (ms: number, s: number) => {

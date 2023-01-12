@@ -45,7 +45,7 @@ export default class User extends Base implements Sender {
         this._mfaEnabled = user.mfa_enabled || false;
         this._banner = user.banner || undefined;
         this._accentColor = user.accent_color ? new Color(user.accent_color as ColorResolveable) : Color.Default;
-        this._locale = user.locale || "en-US";
+        this._locale = user.locale;
         this._verified = user.verified || false;
         this._email = user.email || undefined;
         this._premiumType = user.premium_type || Nitro.NONE;
@@ -59,7 +59,7 @@ export default class User extends Base implements Sender {
 
     async send(...sendable: Sendable[]) {
         const dms = await this.makeDMs();
-        if(!dms) return;
+        if(!dms) throw new Error(`There was an error when creating a dm channel with this user.`);
         return await dms.send(...sendable);
     }
 

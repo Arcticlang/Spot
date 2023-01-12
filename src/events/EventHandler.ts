@@ -4,6 +4,7 @@ import BaseChannel from '../classes/channel/BaseChannel';
 import Message from '../classes/message/Message';
 import { events } from './Listener';
 import CommandHandler from '../commands/CommandHandler';
+import { Resume } from '../interfaces/Resume';
 
 class EventHandler {
 
@@ -36,6 +37,22 @@ class EventHandler {
     }
 
     ready = async(spot: Spot, data: any): Promise<[Spot]> => {
+        return [ spot ];
+    }
+
+    resumed = async(spot: Spot, data: any): Promise<[Spot, Resume]> => {
+        return [ spot, data as Resume ];
+    }
+
+    reconnect = async(spot: Spot, data: any): Promise<[Spot]> => {
+        return [ spot ];
+    }
+
+    invalid_session = async(spot: Spot, data: any): Promise<[Spot, boolean]> => {
+        return [ spot, data ];
+    }
+
+    application_command_permissions_update = async(spot: Spot, data: any): Promise<[Spot]> => {
         return [ spot ];
     }
 

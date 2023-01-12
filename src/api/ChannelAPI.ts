@@ -66,19 +66,6 @@ export default class ChannelAPI {
 		);
 	}
 
-	async replyMessage(channel: string, message_id: string, content: string, tts: boolean=false, body: any = {}) {
-		return await this.api.call(
-			`/channels/${channel}/messages`,
-			{
-				content,
-				message_reference: { message_id },
-				tts: !!tts,
-				...body
-			},
-			"POST"
-		);
-	}
-
 	async generateMessageData(sendables: Sendable[], body: any = {}) {
 		let messageBody: any = {};
 
