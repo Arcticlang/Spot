@@ -31,9 +31,12 @@ export default class Spot {
     readonly config: SpotConfiguration;
     readonly api: API;
 
-    readonly ws: WebSocket;
+    private ws: WebSocket;
     private interval: NodeJS.Timer;
     private payload: any;
+    private intends: Number;
+
+    public errorState: Boolean;
 
     constructor() {
         this.config = this.loadConfig();
@@ -60,6 +63,8 @@ export default class Spot {
                 }
             }
         };
+        this.errorState = false
+        this.intends = getIntents(events, this.config, this.errorState);
     }
 
     /**
@@ -68,7 +73,7 @@ export default class Spot {
      */
     run() {
         this.ws.on("open", () => {
-            this.payload.d.intents = getIntents(events, this.config);
+            this.payload.d.intents = this.intends;
             this.ws.send(JSON.stringify(this.payload));
         });
 
@@ -88,7 +93,16 @@ export default class Spot {
 
         this.ws.on("close", (code, reason) => {
             const closeCode = code as CloseCodes;
-            console.error(`Error: Gateway error code ${closeCode} for \n${reason}.`);
+            switch(code){
+                case CloseCodes.DISALLOWED_INTENTS:
+                    this.errorState = true;
+                    this.intends = getIntents(events, this.config, this.errorState);
+                    this.ws = new WebSocket(gateway);
+                    this.run()
+                    break;
+                default:
+                    console.error(`Error: Gateway error code ${closeCode} for \n${reason}.`);
+            }
         })
     }
 

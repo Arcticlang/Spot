@@ -15,6 +15,8 @@ class EventHandler {
                 const message = (await this.message_create(spot, d))[1];
                 await CommandHandler.tryCommand(spot, message);
                 break;
+            case "READY":
+                if(spot.errorState) console.log(`Alert: You forgot to enable few permissions at https://discord.com/developers/applications/${d.user.id}/information\nBot will still work but might not receive certain events and data from discord`)
         }
 
         const registeredEvents = events.get(t);
