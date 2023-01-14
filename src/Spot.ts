@@ -152,7 +152,6 @@ export default class Spot {
                 default:
                     if (supports_ansi) console.error(`\x1b[31m[ ERROR ]\x1b[0m Gateway error code \x1b[36m${closeCode}\x1b[0m for reason: \x1b[35m${reason}\x1b[0m`);
                     if (!supports_ansi) console.error(`[ ERROR ] Gateway error code ${closeCode} for reason: ${reason}.`);
-                    console.log(close_code_help[code.toString()]);
             }
         })
     }
