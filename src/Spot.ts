@@ -152,6 +152,18 @@ export default class Spot {
                 default:
                     if (supports_ansi) console.error(`\x1b[31m[ ERROR ]\x1b[0m Gateway error code \x1b[36m${closeCode}\x1b[0m for reason: \x1b[35m${reason}\x1b[0m`);
                     if (!supports_ansi) console.error(`[ ERROR ] Gateway error code ${closeCode} for reason: ${reason}.`);
+
+                    // TODO: Use close_code_help to automatically print help text
+
+                    switch (code-1) {
+                        case CloseCodes.NO_AUTH:
+                            if (supports_ansi) console.log("\x1b[34m[ HELP ]\x1b[0m Check your authentication token.");
+                            if (!supports_ansi) console.log("[ HELP ] Check your authentication token.");
+                            break;
+                        case CloseCodes.RATE_LIMITED:
+                            if (supports_ansi) console.log("\x1b[34m[ HELP ]\x1b[0m Try again later.");
+                            if (!supports_ansi) console.log("[ HELP ] Try again later.");
+                }
             }
         })
     }
