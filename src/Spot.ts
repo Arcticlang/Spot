@@ -33,9 +33,12 @@ export default class Spot {
     readonly config: SpotConfiguration;
     readonly api: API;
 
-    readonly ws: WebSocket;
+    private ws: WebSocket;
     private interval: NodeJS.Timer;
     private payload: any;
+    private intends: Number;
+
+    public errorState: Boolean;
 
     constructor() {
         this.config = this.loadConfig();
@@ -62,11 +65,13 @@ export default class Spot {
                 }
             }
         };
-
         if (this.config.enableStartingMessage) {
             // print introduction message
             this.starting_msg();
         }
+
+        this.errorState = false;
+        this.intents = getIntents(events, this.config, this.errorState);
     }
 
     private starting_msg = () => {
@@ -93,7 +98,6 @@ export default class Spot {
             if (supports_ansi) console.log("\x1b[31m[ ERROR ]\x1b[0m Error occured while reading starting message logo content. \x1b[38;5;59mDon't worry, this won't break anything.\x1b[0m");
             if (!supports_ansi) console.log("[ ERROR ] Error occured while reading starting message logo content. Don't worry, this won't break anything.");
         }
- 
     }
 
     /**
@@ -102,7 +106,7 @@ export default class Spot {
      */
     run() {
         this.ws.on("open", () => {
-            this.payload.d.intents = getIntents(events, this.config);
+            this.payload.d.intents = this.intends;
             this.ws.send(JSON.stringify(this.payload));
         });
 
@@ -122,7 +126,16 @@ export default class Spot {
 
         this.ws.on("close", (code, reason) => {
             const closeCode = code as CloseCodes;
-            console.error(`Error: Gateway error code ${closeCode} for \n${reason}.`);
+            switch(code){
+                case CloseCodes.DISALLOWED_INTENTS:
+                    this.errorState = true;
+                    this.intends = getIntents(events, this.config, this.errorState);
+                    this.ws = new WebSocket(gateway);
+                    this.run()
+                    break;
+                default:
+                    console.error(`Error: Gateway error code ${closeCode} for \n${reason}.`);
+            }
         })
     }
 

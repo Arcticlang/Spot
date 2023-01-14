@@ -69,10 +69,12 @@ const intents: Object = {
 	// AUTO_MODERATION_EXECUTION
 	AUTO_MODERATION_ACTION_EXECUTION: [21],
 };
+const privilegedIntents: Array<Number> = [1, 8] //GUILD MEMBER and GUILD PRESENCE
 
 export default (
 	events: Map<string, Function[]>,
-	{ enableMessageContent, useCustomCommands }: SpotConfiguration
+	{ enableMessageContent, useCustomCommands }: SpotConfiguration,
+	errorState: Boolean
 ) => {
 	const eventArray: Array<String> = Array.from(events.keys());
 	var intentBits: Array<Number> = Array(22).fill(0);
@@ -83,11 +85,12 @@ export default (
 		)[event as string];
 		if (intentBitShiftArray) {
 			intentBitShiftArray.forEach((intentBitShift) => {
+				if(errorState && privilegedIntents.includes(intentBitShift))	return;	
 				intentBits[21 - (intentBitShift as number)] = 1;
 			});
 		}
 	});
-	if (enableMessageContent || useCustomCommands) intentBits[21 - 15] = 1; //Change the bit for MESSAGE_CONTENT
+	if ((enableMessageContent || useCustomCommands) && !errorState) intentBits[21 - 15] = 1; //Change the bit for MESSAGE_CONTENT
 
 	const intent: Number = parseInt(intentBits.join(""), 2);
 
