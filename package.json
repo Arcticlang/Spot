@@ -20,6 +20,7 @@
 	"homepage": "https://github.com/DiscordSpot/Spot",
 	"types": "./src/index.ts",
 	"dependencies": {
+		"better-terminal-ui": "^3.0.0",
 		"fs": "^0.0.1-security",
 		"node-fetch": "^2.6.7",
 		"path": "^0.12.7",

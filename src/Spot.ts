@@ -1,6 +1,7 @@
 import path from "path";
 import fs from "fs";
 import WebSocket from "ws";
+import betterTerminalUI from 'better-terminal-ui';
 
 import { events } from "./events/Listener";
 import { SpotConfiguration } from "./types";
@@ -37,7 +38,9 @@ export default class Spot {
     private interval: NodeJS.Timer;
     private payload: any;
     private intents: Number;
-
+    private error: any;
+    
+    public botStatus: any;
     public errorState: Boolean;
 
     constructor() {
@@ -75,29 +78,11 @@ export default class Spot {
     }
 
     private starting_msg = () => {
-        try {
-            // read src/logo.txt, and print
-            const logo = fs.readFileSync(path.join(__dirname, "logo.txt"), "utf-8");
-            const lines = logo.split("\n"); // split the logo into individual lines (for iterating over)
-
-            for (let line_index = 0; line_index < lines.length; line_index++) {
-                let line_text = "";
-
-                if (line_index == 1) line_text = "\x1b[32mVersion:\x1b[0m UNDEFINED";
-                if (line_index == 2) line_text = `\x1b[32mBot Token:\x1b[0m ${this.config.token.slice(0,4)}...${this.config.token.slice(-4)}`;
-
-                if (line_index == 6) line_text = "Enjoy using Spot!";
-                if (line_index == 7) line_text = "https://spotdev.tk";
-
-                console.log(`${lines[line_index]}      ${line_text}`); 
-            }
-
-        } catch (err) {
-            // error occured while opening file
-            
-            if (supports_ansi) console.log("\x1b[31m[ ERROR ]\x1b[0m Error occured while reading starting message logo content. \x1b[38;5;59mDon't worry, this won't break anything.\x1b[0m");
-            if (!supports_ansi) console.log("[ ERROR ] Error occured while reading starting message logo content. Don't worry, this won't break anything.");
-        }
+        const logo = fs.readFileSync(path.join(__dirname, "logo.txt"), "utf-8");
+        const ui = new betterTerminalUI(logo);
+        ui.createVariable("token", `${this.config.token.slice(0,4)}...${this.config.token.slice(-4)}`)
+        this.botStatus = ui.createVariable("status", `Starting...`);
+        this.error = ui.createVariable("error", `NONE`);
     }
 
     /**
@@ -106,6 +91,7 @@ export default class Spot {
      */
     run() {
         this.ws.on("open", () => {
+            this.botStatus.update("Connecting...");
             this.payload.d.intents = this.intents;
             this.ws.send(JSON.stringify(this.payload));
         });
@@ -134,7 +120,8 @@ export default class Spot {
                     this.run()
                     break;
                 default:
-                    console.error(`Error: Gateway error code ${closeCode} for \n${reason}.`);
+                    this.botStatus.update("Failed")
+                    this.error.update(code.toString())
             }
         })
     }
