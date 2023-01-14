@@ -36,7 +36,7 @@ export default class Spot {
     private ws: WebSocket;
     private interval: NodeJS.Timer;
     private payload: any;
-    private intends: Number;
+    private intents: Number;
 
     public errorState: Boolean;
 
@@ -106,7 +106,7 @@ export default class Spot {
      */
     run() {
         this.ws.on("open", () => {
-            this.payload.d.intents = this.intends;
+            this.payload.d.intents = this.intents;
             this.ws.send(JSON.stringify(this.payload));
         });
 
@@ -129,7 +129,7 @@ export default class Spot {
             switch(code){
                 case CloseCodes.DISALLOWED_INTENTS:
                     this.errorState = true;
-                    this.intends = getIntents(events, this.config, this.errorState);
+                    this.intents = getIntents(events, this.config, this.errorState);
                     this.ws = new WebSocket(gateway);
                     this.run()
                     break;
