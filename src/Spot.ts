@@ -27,6 +27,22 @@ export enum CloseCodes {
 	DISALLOWED_INTENTS = 4014,
 }
 
+const close_code_help = {
+    "4000": "",
+    "4001": "",
+    "4002": "",
+    "4003": "Check your configuration file for the correct token and bot name.",
+    "4005": "",
+    "4007": "",
+    "4008": "Try again later.",
+    "4009": "",
+    "4010": "",
+    "4011": "",
+    "4012": "Check your API version",
+    "4013": "",
+    "4014": ""
+}
+
 let supports_ansi = supportsAnsi()
 
 export default class Spot {
@@ -65,7 +81,7 @@ export default class Spot {
                 }
             }
         };
-        if (this.config.enableStartingMessage) {
+        if (this.config.enableStartingMessage || this.config.enableStartingMessage == undefined) {
             // print introduction message
             this.starting_msg();
         }
@@ -131,10 +147,12 @@ export default class Spot {
                     this.errorState = true;
                     this.intents = getIntents(events, this.config, this.errorState);
                     this.ws = new WebSocket(gateway);
-                    this.run()
+                    this.run();
                     break;
                 default:
-                    console.error(`Error: Gateway error code ${closeCode} for \n${reason}.`);
+                    if (supports_ansi) console.error(`\x1b[31m[ ERROR ]\x1b[0m Gateway error code \x1b[36m${closeCode}\x1b[0m for reason: \x1b[35m${reason}\x1b[0m`);
+                    if (!supports_ansi) console.error(`[ ERROR ] Gateway error code ${closeCode} for reason: ${reason}.`);
+                    console.log(close_code_help[code.toString()]);
             }
         })
     }
