@@ -11,6 +11,7 @@ import getIntents from "./intents";
 
 import { supportsAnsi } from './supports_ansi'
 
+
 export enum CloseCodes {
 	UNKNOWN = 4000,
 	OPCODE = 4001,
@@ -27,7 +28,7 @@ export enum CloseCodes {
 	DISALLOWED_INTENTS = 4014,
 }
 
-let supports_ansi = supportsAnsi()
+const supports_ansi = supportsAnsi();
 
 export default class Spot {
     readonly config: SpotConfiguration;
@@ -70,21 +71,15 @@ export default class Spot {
     }
 
     private starting_msg = () => {
+        // read introduction message file
+        
         try {
             // read src/logo.txt, and print
             const logo = fs.readFileSync(path.join(__dirname, "logo.txt"), "utf-8");
             const lines = logo.split("\n"); // split the logo into individual lines (for iterating over)
 
-            for (let line_index = 0; line_index < lines.length; line_index++) {
-                let line_text = "";
-
-                if (line_index == 1) line_text = "\x1b[32mVersion:\x1b[0m UNDEFINED";
-                if (line_index == 2) line_text = `\x1b[32mBot Token:\x1b[0m ${this.config.token.slice(0,4)}...${this.config.token.slice(-4)}`;
-
-                if (line_index == 6) line_text = "Enjoy using Spot!";
-                if (line_index == 7) line_text = "https://spotdev.tk";
-
-                console.log(`${lines[line_index]}      ${line_text}`); 
+            for (let line : lines) {
+                console.log(line); 
             }
 
         } catch (err) {
@@ -93,7 +88,6 @@ export default class Spot {
             if (supports_ansi) console.log("\x1b[31m[ ERROR ]\x1b[0m Error occured while reading starting message logo content. \x1b[38;5;59mDon't worry, this won't break anything.\x1b[0m");
             if (!supports_ansi) console.log("[ ERROR ] Error occured while reading starting message logo content. Don't worry, this won't break anything.");
         }
- 
     }
 
     /**

@@ -28,6 +28,8 @@ export type SpotConfiguration = {
 	enableMessageContent: boolean;
 	// logRegisteredEvents?: boolean;
 	// logRegisteredCommands?: boolean;
+
+	enableStartingMessage: boolean;
 }
 
 export type Method = "GET" | "POST" | "DELETE" | "PUT" | "PATCH";
