@@ -183,7 +183,10 @@ export default class Spot {
         }
         
         const loadedConfig = require(configPath);
-        if(!loadedConfig.default) throw new Error("No default configuration found.");
+        if(!loadedConfig.default) {
+            if (supports_ansi) throw new Error("\x1b[31m[ ERROR ]\x1b[0m No default configuration found.");
+            if (!supports_ansi) throw new Error("[ ERROR ] No default configuration found.");
+        }
 
         return loadedConfig.default as SpotConfiguration;
     }
