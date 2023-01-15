@@ -9,6 +9,8 @@ import EventHandler from "./events/EventHandler";
 import API from "./api/API";
 import getIntents from "./intents";
 
+import pkg_info from "../package.json";
+
 import { supportsAnsi } from './supports_ansi'
 
 export enum CloseCodes {
@@ -99,8 +101,9 @@ export default class Spot {
             for (let line_index = 0; line_index < lines.length; line_index++) {
                 let line_text = "";
 
-                if (line_index == 1) line_text = "\x1b[32mVersion:\x1b[0m UNDEFINED";
-                if (line_index == 2) line_text = `\x1b[32mBot Token:\x1b[0m ${this.config.token.slice(0,4)}...${this.config.token.slice(-4)}`;
+                if (line_index == 1) line_text = `\x1b[4m${pkg_info.name}\x1b[0m`;
+                if (line_index == 2) line_text = `\x1b[32mVersion:\x1b[0m ${pkg_info.version}`;
+                if (line_index == 3) line_text = `\x1b[32mBot Token:\x1b[0m ${this.config.token.slice(0,4)}...${this.config.token.slice(-4)}`;
 
                 if (line_index == 6) line_text = "Enjoy using Spot!";
                 if (line_index == 7) line_text = "https://spotdev.tk";
