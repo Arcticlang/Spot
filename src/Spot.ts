@@ -8,6 +8,7 @@ import { gateway } from "./constants";
 import EventHandler from "./events/EventHandler";
 import API from "./api/API";
 import getIntents from "./intents";
+import { appendLog } from './AuditLogs';
 
 import pkg_info from "../package.json";
 
@@ -55,6 +56,7 @@ export default class Spot {
     private interval: NodeJS.Timer;
     private payload: any;
     private intents: Number;
+    private start_time: Date;
 
     public errorState: Boolean;
 
@@ -90,6 +92,19 @@ export default class Spot {
 
         this.errorState = false;
         this.intents = getIntents(events, this.config, this.errorState);
+
+        this.start_time = new Date();
+
+        if (this.config.logsEnabled) {
+            appendLog("------( BOT STARTED )------\n");
+
+            const date_format = this.config.logDateFormat ?? "$M/$D/$Y";
+            let date = date_format.replace("$M", (this.start_time.getMonth()+1).toString())
+                                  .replace("$D", this.start_time.getDate().toString())
+                                  .replace("$Y", this.start_time.getFullYear().toString());
+
+            appendLog(`Date: ${date}\n`);
+        }
     }
 
     private starting_msg = () => {

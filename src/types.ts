@@ -30,6 +30,11 @@ export type SpotConfiguration = {
 	// logRegisteredCommands?: boolean;
 
 	enableStartingMessage: boolean;
+
+    // logs
+    
+    logsEnabled: boolean;
+    logDateFormat: string;
 }
 
 export type Method = "GET" | "POST" | "DELETE" | "PUT" | "PATCH";
