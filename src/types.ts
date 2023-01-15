@@ -34,7 +34,7 @@ export type SpotConfiguration = {
     // logs
     
     logsEnabled: boolean;
-    logDateFormat: string;
+    logTimeFormat: string;
 }
 
 export type Method = "GET" | "POST" | "DELETE" | "PUT" | "PATCH";

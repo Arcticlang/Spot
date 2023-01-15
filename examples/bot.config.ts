@@ -4,5 +4,5 @@ export default {
     name: "Your Bot Name",
     token: "Your Bot Token",
     logsEnabled: true,
-    logDateFormat: "$Y/$M/$D" // year, month, day
+    logTimeFormat: "$Y/$M/$D $h:$m:$s" // year, month, day | hours, minutes, seconds
 } as SpotConfiguration;

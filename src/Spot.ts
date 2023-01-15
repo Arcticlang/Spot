@@ -98,12 +98,18 @@ export default class Spot {
         if (this.config.logsEnabled) {
             appendLog("------( BOT STARTED )------\n");
 
-            const date_format = this.config.logDateFormat ?? "$M/$D/$Y";
-            let date = date_format.replace("$M", (this.start_time.getMonth()+1).toString())
+            const time_format = this.config.logTimeFormat ?? "$M/$D/$Y $h:$m:$s";
+            let time = time_format.replace("$M", (this.start_time.getMonth()+1).toString())
                                   .replace("$D", this.start_time.getDate().toString())
-                                  .replace("$Y", this.start_time.getFullYear().toString());
+                                  .replace("$Y", this.start_time.getFullYear().toString())
+                                  .replace("$h", this.start_time.getHours().toString())
+                                  .replace("$m", this.start_time.getMinutes().toString())
+                                  .replace("$s", this.start_time.getSeconds().toString());
 
-            appendLog(`Date: ${date}\n`);
+            appendLog(`Time: ${time}\n`);
+            appendLog(`Bot Token: ${this.config.token.slice(0,4)}...${this.config.token.slice(-4)}\n`);
+            appendLog(`Spot Version: ${pkg_info.version}\n`);
+            
         }
     }
 
@@ -111,7 +117,7 @@ export default class Spot {
         try {
             // read src/logo.txt, and print
             const logo = fs.readFileSync(path.join(__dirname, "logo.txt"), "utf-8");
-            const lines = logo.split("\n"); // split the logo into individual lines (for iterating over)
+            const lines = logo.split("\n"); // split the logo into individual lines (for iterating over later)
 
             for (let line_index = 0; line_index < lines.length; line_index++) {
                 let line_text = "";
