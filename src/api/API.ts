@@ -5,6 +5,9 @@ import { Method } from "../types";
 import ChannelAPI from './ChannelAPI';
 import GuildAPI from './GuildAPI';
 import UserAPI from './UserAPI';
+import { supportsAnsi } from '../supports_ansi'
+
+const supports_ansi = supportsAnsi();
 
 export default class API {
     readonly spot: Spot;
@@ -27,7 +30,8 @@ export default class API {
     ) {
         const token = this.spot.config.token;
         if(!token)
-            throw new Error("\x1b[31m[ ERROR ] \x1b[0mToken is missing. \n\n\x1b[36m[ i ] Please make sure that you have a token inside of bot.config.ts\x1b[0m");
+            if (supports_ansi) throw new Error("\x1b[31m[ ERROR ]\x1b[0m Token is missing. \n\n\x1b[36m[ i ] Please make sure that you have a token inside of bot.config.ts\x1b[0m");
+            if (!supports_ansi) throw new Error("[ ERROR ] Token is missing. \n\nPlease make sure that you have a token inside of bot.config.ts");
         const request: RequestInit = {
             body: JSON.stringify(body) as BodyInit,
             method,
@@ -45,8 +49,10 @@ export default class API {
         );
 
         if(!(res.status == 200 ||
-            res.status == 204))
-            throw new Error(`\x1b[31m[ STATUS ]\x1b[0m ${res.status} ${res.statusText}\n${await res.text()}`);
+            res.status == 204)) {
+            if (supports_ansi) throw new Error(`\x1b[31m[ STATUS ]\x1b[0m ${res.status} ${res.statusText}\n${await res.text()}`);
+            if (!supports_ansi) throw new Error(`[ STATUS ] ${res.status} ${res.statusText}\n${await res.text()}`);
+        }
 
         if(res.status != 204)
             return await res.json();

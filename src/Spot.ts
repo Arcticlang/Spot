@@ -11,7 +11,7 @@ import getIntents from "./intents";
 
 import pkg_info from "../package.json";
 
-import { supportsAnsi } from './supports_ansi'
+import { supportsAnsi } from './supports_ansi';
 
 export enum CloseCodes {
 	UNKNOWN = 4000,
@@ -45,7 +45,7 @@ const close_code_help = {
     "4014": ""
 }
 
-let supports_ansi = supportsAnsi()
+const supports_ansi = supportsAnsi();
 
 export default class Spot {
     readonly config: SpotConfiguration;

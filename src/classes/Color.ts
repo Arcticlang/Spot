@@ -1,3 +1,5 @@
+import { supportsAnsi } from '../supports_ansi'
+
 export type ColorResolveable = | number | `#${string}` | [ number, number, number ];
 
 export default class Color {
@@ -44,7 +46,8 @@ export default class Color {
             else if(color instanceof Array) return this.fromRgb(color); 
             else if(typeof color === "number") return color;
 
-        throw new Error(`Color ${color} could not be converted into a valid decimal number.`);
+        // supportsAnsi() CAUSING ERRORS.
+        throw new Error(`\x1b[31m[ ERROR ]\x1b[0m Color ${color} could not be converted into a valid decimal number.`);
     }
 
     private fromHex(hex: string) {
