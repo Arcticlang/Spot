@@ -8,7 +8,7 @@ import { gateway } from "./constants";
 import EventHandler from "./events/EventHandler";
 import API from "./api/API";
 import getIntents from "./intents";
-import { appendLog } from './AuditLogs';
+import { appendLog } from './Logs.ts';
 
 import pkg_info from "../package.json";
 
