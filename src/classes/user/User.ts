@@ -5,8 +5,9 @@ import { Nitro } from "./Nitro";
 import { Sender } from "../../interfaces/Sender";
 import { Sendable } from "../../types";
 import BaseChannel from '../channel/BaseChannel';
+import Editable from "../../interfaces/Editable";
 
-export default class User extends Base implements Sender {
+export default class User extends Base implements Sender, Editable {
     static async build(spot: Spot, id: string) {
         const user = new User(spot, id);
         await user.#props();
@@ -61,6 +62,10 @@ export default class User extends Base implements Sender {
         const dms = await this.makeDMs();
         if(!dms) return;
         return await dms.send(...sendable);
+    }
+
+    async edit(...args: any[]): Promise<void> {
+        
     }
 
     get channel() {

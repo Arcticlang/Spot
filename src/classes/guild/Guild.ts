@@ -1,3 +1,4 @@
+import Editable from "../../interfaces/Editable";
 import Spot from "../../Spot";
 import Base from "../Base";
 import Role from "./role/Role";
@@ -62,7 +63,7 @@ export type GuildFeature =
 
 export type MutableGuildFeatures = | "COMMUNITY" | "INVITES_DISABLED" | "DISCOVERABLE";
 
-export default class Guild extends Base {
+export default class Guild extends Base implements Editable {
 	static async build(spot: Spot, id: string) {
 		const guild = new Guild(spot, id);
 		await guild.#props();
@@ -138,4 +139,9 @@ export default class Guild extends Base {
         this._explicitContentFilter = guild.explicit_content_filter as ExplicitContentFilter;
         this._roles = guild.roles; // TODO: Map all roles a Role object.
 	}
+
+	async edit(...args: any[]): Promise<void> {
+        
+    }
+	
 }

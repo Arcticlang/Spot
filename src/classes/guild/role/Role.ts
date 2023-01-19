@@ -1,8 +1,9 @@
 import Base from "../../Base";
 import Spot from '../../../Spot';
 import Color, { ColorResolveable } from '../../Color';
+import Editable from '../../../interfaces/Editable';
 
-export default class Role extends Base {
+export default class Role extends Base implements Editable {
     static async build(spot: Spot, id: string) {
         const role = new Role(spot, id);
         await role.#props();
@@ -33,6 +34,10 @@ export default class Role extends Base {
         this._color = role.color ? new Color(role.color as ColorResolveable) : Color.Default;
         this._hoist = role.hoist;
         this._icon = role.icon;
+    }
+
+    async edit(...args: any[]): Promise<void> {
+        
     }
 
     get name() {

@@ -6,6 +6,7 @@ import User from "../user/User";
 import Role from "../guild/role/Role";
 import MentionHandler from "./MentionHandler";
 import { Sendable } from '../../types';
+import Editable from "../../interfaces/Editable";
 
 export enum MessageType {
 	DEFAULT = 0,
@@ -34,7 +35,7 @@ export enum MessageType {
 	AUTO_MODERATION_ACTION = 24,
 }
 
-export default class Message extends Base {
+export default class Message extends Base implements Editable {
 	static async build(spot: Spot, id: string, channel: BaseChannel) {
 		const message = new Message(spot, id, channel);
 		await message.#props();
@@ -106,6 +107,10 @@ export default class Message extends Base {
 	async delete() {
 		await this.spot.api.channels.deleteMessage(this._channelId, this.id);
 	}
+
+	async edit(...args: any[]): Promise<void> {
+        
+    }
 
 	get author() {
 		return this._author;

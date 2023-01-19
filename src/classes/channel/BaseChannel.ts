@@ -2,6 +2,7 @@ import { Sender } from "../../interfaces/Sender";
 import Spot from "../../Spot";
 import Base from "../Base";
 import { Sendable } from "../../types";
+import Editable from "../../interfaces/Editable";
 
 export enum ChannelType {
 	TEXT = 0,
@@ -18,7 +19,7 @@ export enum ChannelType {
 	FOURM = 15,
 }
 
-export default class BaseChannel extends Base implements Sender {
+export default class BaseChannel extends Base implements Sender, Editable {
 	static async build(spot: Spot, id: string) {
 		const channel = new BaseChannel(spot, id);
 		await channel.#props();
@@ -42,4 +43,8 @@ export default class BaseChannel extends Base implements Sender {
 			await this.spot.api.channels.generateMessageData(sendable)
 		);
 	}
+
+	async edit(...args: any[]): Promise<void> {
+        
+    }
 }
