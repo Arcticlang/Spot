@@ -1,11 +1,12 @@
 import Spot from '../Spot';
-import Message from '../classes/message/Message';
+import MessageCreateEvent from '../events/classes/MessageCreateEvent';
 
 export default class CommandHandler {
     static commands: Map<string, Function> = new Map<string, Function>();
 
-    static async tryCommand(spot: Spot, message: Message) {
+    static async tryCommand(spot: Spot, event: MessageCreateEvent) {
         if(!spot.config.useCustomCommands) return;
+        const message = event.getMessage();
 
         let prefix = spot.config.prefix;
         if(!prefix) {
@@ -13,7 +14,7 @@ export default class CommandHandler {
             prefix = "!";
         }
 
-        if(message.author.isBot) return;
+        if(message.sender.isBot) return;
         if(message.content.indexOf(prefix) !== 0) return;
 
         const args = message.content.slice(prefix.length).trim().split(/ +/g);

@@ -112,7 +112,7 @@ export default class Message extends Base implements Editable {
         
     }
 
-	get author() {
+	get sender() {
 		return this._author;
 	}
 

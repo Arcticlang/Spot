@@ -4,6 +4,7 @@ import BaseChannel from '../classes/channel/BaseChannel';
 import Message from '../classes/message/Message';
 import { events } from './Listener';
 import CommandHandler from '../commands/CommandHandler';
+import MessageCreateEvent from './classes/MessageCreateEvent';
 
 class EventHandler {
 
@@ -12,7 +13,7 @@ class EventHandler {
     async findEvent(spot: Spot, t: string, d: any) {
         switch(t) {
             case "MESSAGE_CREATE":
-                const message = (await this.message_create(spot, d))[1];
+                const message = (await this.message_create(spot, d))[0];
                 await CommandHandler.tryCommand(spot, message);
                 break;
             case "READY":
@@ -33,18 +34,18 @@ class EventHandler {
         return getattr(this, name.toLowerCase(), this.noMethodFound);
     }
 
-    async noMethodFound(spot: Spot, data: any): Promise<[Spot]> {
-        return [ spot ];
+    async noMethodFound(spot: Spot, data: any): Promise<[]> {
+        return [  ];
     }
 
-    ready = async(spot: Spot, data: any): Promise<[Spot]> => {
-        return [ spot ];
+    ready = async(spot: Spot, data: any): Promise<[]> => {
+        return [ ];
     }
 
-    message_create = async(spot: Spot, data: any): Promise<[Spot, Message]> => {
+    message_create = async(spot: Spot, data: any): Promise<[MessageCreateEvent]> => {
         const channel = await BaseChannel.build(spot, data.channel_id);
         const message = await Message.build(spot, data.id, channel);
-        return [ spot, message ];
+        return [ new MessageCreateEvent(message) ];
     }
 
 }
